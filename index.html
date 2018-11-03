@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Strefa Matematyki</title>
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+
+    <div id="game">
+        <div id="game-info">
+            <div class="timer-container"><div class="timer">60</div></div>
+            <div class="points"><p class="description">punkty</p><p class="value">0</p></div>
+        </div>
+
+        <ul id="sequence">
+        </ul>
+
+        <div id="answer">
+            <input type="text" pattern="^-?[0-9]*" name="answer" value="" autofocus>
+            <button onclick="Next()">OK</button>
+        </div>
+    </div>
+
+    <div id="start" class="pop-up">
+        <div class="content">
+            <h1>Jaka będzie kolejna liczba?</h1>
+            <button onclick="Start()">Start</button>
+        </div>
+    </div>
+
+    <div id="gameover" class="pop-up">
+        <div class="content">
+            <h1>Game Over</h1>
+            <p class="yourScore">Wynik: </p>
+            <button onclick="Restart()">Nowa gra</button>
+        </div>
+    </div>
+
+
+<script>
+    const numberOfElements = 10;
+    const indexOfWantedElement = 6;
+    const duration = 60; //1 min
+    var firstNumber;
+    var currentSequence = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    var points = 0;
+
+    const input = document.querySelector('input[name="answer"]');
+    const pointsDiv = document.querySelector(`.points`);
+    const pointsText = document.querySelector(`.value`);
+    const scoreText = document.querySelector(`.yourScore`);
+
+    const startPanel = document.querySelector(`#start`);
+    const gameOverPanel = document.querySelector(`#gameover`);
+
+    function removeTransition(e) {
+        e.target.classList.remove('right');
+        e.target.classList.remove('wrong');
+    }
+
+    function generateSequence(t){
+        let sequenceType = Math.floor(Math.random() * 7);
+        let firstNumber = Math.floor(Math.random() * 10 + -3);
+        let randomNumber1, randomNumber2;
+        t[0] = firstNumber != 0 ? firstNumber : 1;
+
+        switch (sequenceType) {
+            case 0:
+                    randomNumber2 = Math.floor(Math.random() * 11 + 3);
+                    for(let i = 1; i < numberOfElements; i++) {
+                        t[i] = t[i-1]+randomNumber2;
+                    }
+                    break;
+            case 1:
+                    randomNumber1 = Math.floor(Math.random() * 2 + 1);
+                    randomNumber2 = Math.floor(Math.random() * 5 + 1);
+                    for(let i = 1; i < numberOfElements; i++) {
+                        t[i] = t[i-1]*randomNumber1+randomNumber2;
+                    }
+                    break;
+            case 2:
+                    randomNumber1 = Math.floor(Math.random() * 2 + 2);
+                    randomNumber2 = Math.floor(Math.random() * 2 + 1);
+                    t[1] = t[0]*randomNumber1;
+                    for(let i = 2; i < numberOfElements; i++) {
+                        t[i] = t[i-1]*randomNumber1-t[i-2]*randomNumber2;
+                    }
+                    break;
+            case 3:
+                    randomNumber1 = Math.floor(Math.random() * 3 + 2);
+                    randomNumber2 = Math.floor(Math.random() * 5 + 2);
+                    t[1] = t[0]*randomNumber2;
+                    for(let i = 2; i < numberOfElements; i+=2) {
+                        t[i] = t[i-2]*randomNumber1;
+                    }
+                    for(let i = 3; i < numberOfElements; i+=2) {
+                        t[i] = t[i-2]+randomNumber2;
+                    }
+                    break;
+            case 4:
+                    randomNumber1 = Math.floor(Math.random() * 2 + 2);
+                    for(let i = 1; i < numberOfElements; i++) {
+                        t[i] = t[i-1]*randomNumber1;
+                    }
+                    break;
+            case 5:
+                    t[1] = t[0];
+                    for(let i = 2; i < numberOfElements; i++) {
+                        t[i] = t[i-1]+t[i-2]
+                    }
+                    break;
+            case 6:
+                    randomNumber1 = Math.floor(Math.random() * 2 + 2);
+                    for(let i = 1; i < numberOfElements; i++) {
+                        t[i] = t[i-1]*randomNumber1-i;
+                    }
+                    break;
+            default:
+                console.log('error');
+        }
+    }
+
+    function showSequence(t) {
+        sequence.innerHTML = t.map((value,key) => {
+        if(key < indexOfWantedElement) {
+            return `
+                <li class="element">
+                ${value}
+                </li>
+            `;
+        }
+        else if(key == indexOfWantedElement) {
+            return `
+                <li class="element">
+                . . .
+                </li>
+            `;
+        }
+        }).join('');
+    }
+
+    function Next() {
+        CheckAnswer();
+        generateSequence(currentSequence);
+        showSequence(currentSequence);
+        pointsText.innerHTML = points;
+        input.value = "";
+        input.focus();
+        pointsDiv.addEventListener('transitionend', removeTransition);
+    }
+
+    function CheckAnswer() {
+        if(parseInt(input.value) == currentSequence[indexOfWantedElement]) {
+            points+=2;
+            pointsDiv.classList.add('right');
+        }
+        else {
+            points--;
+            pointsDiv.classList.add('wrong');
+        }
+    }
+
+    function startTimer(duration) {
+        let timer = duration, minutes, seconds;
+        const timerChart = document.querySelector(`.timer`);
+        var myVar = setInterval(function () {
+            timerChart.style.width = timer*1.65+"%";
+            timerChart.innerHTML = timer;
+            if (timer > 0) {
+                --timer;
+            }
+            else if(timer == 0) {
+                gameOverPanel.style.display = "block"; 
+                scoreText.innerHTML += points;
+                --timer;
+            }
+            else {
+                timerChart.style.display = "none";
+                clearInterval(myVar);
+            }
+        }, 1000);
+    }
+
+    function Start() {
+        points = 0;
+        input.value = "";
+        startPanel.style.display = "none"; 
+        input.focus(); 
+        startTimer(duration);
+        generateSequence(currentSequence);
+        showSequence(currentSequence);
+    };
+
+    function Restart() {
+        gameOverPanel.style.display = "none"; 
+        document.location.reload();
+    };
+
+    input.addEventListener("keyup", function(event) {
+        event.preventDefault();
+        if (event.keyCode === 13) {
+            Next();
+        }
+    });
+
+
+
+</script>
+
+      
+</body>
+
+</html>
+

@@ -1,0 +1,219 @@
+$yellow-color: #eac80e;
+$magenta-color: #a70352;
+$blue-color: #068698;
+$background-dark-color: #06222f;
+$background-light-color: #0b3140;
+
+body {
+    background-image: linear-gradient(to bottom, $background-light-color, $blue-color); 
+    height: 100%;
+    font-family: "Jura";
+    padding: 0;
+    margin: 0;
+    color: #fff;
+    font-size: 1.3rem; 
+    overflow: hidden;
+  }
+
+  h1 {
+    font-variant: small-caps;
+  }
+
+  .pop-up {
+    .content {
+        position: relative;
+        background-color: $background-dark-color;
+        margin: 0 auto;
+        width:60%;
+        height: 50%;
+        margin-top: 10%;
+        border-radius: 50px;
+        padding: 2px 0;
+        p {
+            font-size: 2rem;
+        }
+        button {
+            position: absolute;
+            margin: 0 auto;
+            bottom: 30px;
+            margin-left: -100px;
+        }
+    }
+  }
+  
+  #start {
+    top: 0; right: 0;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    background-color: rgba(0,0,0,.95);
+    display: block;
+    .content {
+        margin-top: 10%;
+        height: 38%;
+    }
+  }
+  
+  #gameover {
+    top: 0; right: 0;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    background-color: rgba(0,0,0,.95);
+    display: none;
+    .yourScore {
+        color: $yellow-color;
+        text-shadow: 0 0 2px #f0e39c;
+        margin-top: 50px;
+        animation: glow 1s infinite alternate;
+    }
+  }
+  
+  #game {
+    width: 80%;
+    margin: 5% auto;
+    background-color: #06222f;
+    border-radius: 30px;
+    padding: 3%;
+    position: relative;
+    #game-info {
+        height: 80px;
+        padding: 18px;
+        .timer-container {
+            width: 80%;
+            height: 26px;
+            float: left;
+            margin-top: 30px;
+            .timer {
+                width: 100%;
+                height: 26px;
+                background-image: linear-gradient(to right, $magenta-color 300px, $yellow-color); 
+                transition: width 1.5s;
+                padding: 2px;
+                color: $yellow-color;
+            }
+        }
+        .points {
+            position: absolute;
+            right: 5%;
+            font-size: 1.4rem;
+            color: #fff;
+            width: 50px;
+            height: 50px;
+            text-align: center;
+            border-radius: 50%;
+            padding: 20px;
+            background-color: $blue-color;
+            border: 5px solid $yellow-color;
+            transition: all .5s;
+            &.right {
+                background-color: $yellow-color;
+                transform: scale(1.1);
+            }
+            &.wrong {
+                background-color: $magenta-color;
+                transform: scale(1.1);
+            }
+            .description {
+              font-size: .9rem;
+              margin-top: -5px;
+            }
+            .value {
+              font-size: 2.2rem;
+              font-weight: bold;
+              margin-top: -5px;
+            }
+        }
+    }
+ }
+  
+  button {
+    width: 200px;
+    height: 60px;
+    border: none;
+    font-family: "Jura";
+    font-size: 1.6rem;
+    cursor: pointer;
+    transition: all .2s;
+    color: $background-dark-color;
+    background-color: $yellow-color;
+    &:hover {
+        background-color: $blue-color;
+    }
+  }
+  
+    .key {
+      border: .4rem solid black;
+      border-radius: .5rem;
+      margin: 1rem;
+      font-size: 1.5rem;
+      padding: 1rem .5rem;
+      transition: all .8s ease;
+      width: 10rem;
+      text-align: center;
+      color: white;
+      background: rgba(0,0,0,0.4);
+      text-shadow: 0 0 .5rem black;
+    }
+  
+    .sound {
+      font-size: 1.2rem;
+      text-transform: uppercase;
+      letter-spacing: .1rem;
+      color: $yellow-color;
+    }
+  
+    .playing {
+      transform: scale(1.1);
+      border-color: $yellow-color;
+      box-shadow: 0 0 1rem $yellow-color;
+    }
+  
+    #sequence {
+      margin-left: 20px;
+      padding-bottom: 60px;
+      width: 80%;
+    }
+  
+    .element {
+      font-size: 2.2rem;
+      color: #ffffff;
+      text-shadow: 0 0 2px #f0e39c;
+      list-style-type: none;
+      float: left;
+      width: 80px;
+      height: 60px;
+      padding: 10px;
+      text-align: center;
+    }
+
+    #answer {
+      width: 100%;
+      margin: 0 auto;
+      padding: 0;
+      input {
+        width: 192px;
+        height: 50px;
+        background: none;
+        color: $yellow-color;
+        font-size: 2rem;
+        font-family: "Jura";
+        text-align: center;
+        border: 2px solid $yellow-color;
+        display: block;
+        clear: both;
+        margin: 4% auto;
+      }
+      button {
+        display: block;
+        margin: 4% auto;
+      }
+    }
+
+    @keyframes glow {
+        to {
+            text-shadow: 0 0 4px #fffdf1;
+        }
+    }
